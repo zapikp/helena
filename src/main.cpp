@@ -8,6 +8,7 @@
 //datum posledni zmeny 4.10.2019  - opravena blba chyba v eepromwrite / mensi pole
 //datum posledni zmeny 4.10.2019  - doplnena OTA
 //datum posledni zmeny 12.10.2019 - doplneno verzovani
+//prevod na Git
 
 #include "pwm-new.h"
 #include <Arduino.h>
