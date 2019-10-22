@@ -112,15 +112,10 @@ void to_night();
 void set_pwm (uint16_t pwm);
 void search_temp (void);
 
-//promenne
-#ifdef HELENA
-  const char* ssid     = "BLABLABLA";
-  const char* password = "6503292004";
-#else
-  const char* ssid     = "zapici";
-  //const char* ssid     = "AndroidAPzapik";
-  const char* password = "Jitka6063";
-#endif
+//promenne pro pripojeni k wifi
+#include "password.h"
+//const char* ssid     = "xxxxx";
+//const char* password = "yyyyyy";
 
 const char* host = "zapadlo.name";
 IPAddress host_IP_fallback(91,139,59,185);
