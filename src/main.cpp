@@ -7,8 +7,9 @@
 //datum posledni zmeny 4.10.2019  - kontrola na nulovy unixtime
 //datum posledni zmeny 4.10.2019  - opravena blba chyba v eepromwrite / mensi pole
 //datum posledni zmeny 4.10.2019  - doplnena OTA
-//datum posledni zmeny 12.10.2019 - doplneno verzovani
+//datum posledni zmeny 12.10.2019 -100 doplneno verzovani
 //prevod na Git
+//datum posledni zmeny 28.10.2019 -101 doplnen posun casu rozedneni a setmeni pri zmene zony
 
 #include "pwm-new.h"
 #include <Arduino.h>
@@ -23,7 +24,7 @@
 #include <ArduinoOTA.h>
 
 //na miste
-#define HELENA
+//  #define HELENA
 
 //skript pro ukladani teplot a stavu
 #ifdef HELENA
@@ -38,7 +39,7 @@
 
 //verze
 //1.0.0 14.10.2019
-#define VERSION 100
+#define VERSION 101
 
 
 
@@ -65,6 +66,8 @@
 //#define TOPENI_HASH 212 //hash cidla podle ktere se bude regulovat topeni
 //#define TOPENI_HASH 5 //hash cidla podle ktere se bude regulovat topeni
 #define TOPENI_HASH 184
+//zapnuti posunu casu rozedneni a setmeni podle zvolene casove zony
+#define ABS_TIME 1
 
 #define konstanta 1000 //pocet ms na s
 
@@ -747,6 +750,25 @@ void handleSubmit() {
       EEPROM.write(TIMEZONE,timezone);
       EEPROM.commit();
       zjistiNTP();
+      //prepocitani okamziku rozedneni a stmivani do abslutni casove  polohy
+      if (ABS_TIME==1){
+        if (timezone==1){
+          //jdeme ze zony 2 -> 1
+          //odecitame 1hod
+          cas_rozedneni=cas_rozedneni-3600;
+          cas_setmeni=cas_setmeni-3600;
+          write_to_eeprom(cas_rozedneni, ROZED);
+          write_to_eeprom(cas_setmeni, STMIV);
+        }
+        if (timezone==2){
+          //jdeme ze zony 1 -> 2
+          //pricitame 1 hod
+          cas_rozedneni=cas_rozedneni+3600;
+          cas_setmeni=cas_setmeni+3600;
+          write_to_eeprom(cas_rozedneni, ROZED);
+          write_to_eeprom(cas_setmeni, STMIV);
+        }
+      }
     }
   }
   if (topeni_docas != topeni_temp){
